@@ -42,25 +42,35 @@ if args.bed == None:
 
 one_hot_seq, name_seq = parse_sequence(args.bed, args.genome, args.fasta)
 
-    
+print(name_seq, one_hot_seq.shape)
+
 all_preds = []
 all_y = []
 all_l = []
 all_id = []
 
+
 #X = np.asarray(X).astype(np.float32)
 
+print('open chromatin prediction')
 
 open_chromatin = prediction_open_chromatin(one_hot_seq)
+
+
+print('cell line activity')
+
+
 a549_chromatin, a549_promoter, a549_enhancer = prediction_cell_line(one_hot_seq, 'A549')
-hct116_chromatin, hct116_promoter, hct116_enhancer = prediction_cell_line(one_hot_seq, 'HCT116')
-hepg2_chromatin, hepg2_promoter, hepg2_enhancer = prediction_cell_line(one_hot_seq, 'HEPG2')
-k562_chromatin, k562_promoter, k562_enhancer = prediction_cell_line(one_hot_seq, 'K562')
+#hct116_chromatin, hct116_promoter, hct116_enhancer = prediction_cell_line(one_hot_seq, 'HCT116')
+#hepg2_chromatin, hepg2_promoter, hepg2_enhancer = prediction_cell_line(one_hot_seq, 'HEPG2')
+#k562_chromatin, k562_promoter, k562_enhancer = prediction_cell_line(one_hot_seq, 'K562')
 
 
-print(open_chromatin, a549_chromatin, hct116_chromatin, hepg2_chromatin, k562_chromatin,
-      a549_promoter, hct116_promoter, hepg2_promoter, k562_promoter,
-      a549_enhancer, hct116_enhancer, hepg2_enhancer, k562_enhancer)
+print(open_chromatin, a549_chromatin, #hct116_chromatin, hepg2_chromatin, k562_chromatin,
+      a549_promoter, #hct116_promoter, hepg2_promoter, k562_promoter,
+      a549_enhancer, #hct116_enhancer, hepg2_enhancer, k562_enhancer
+     )
+
 '''
 all_preds.append(test_type_avg)
 all_y.append(y_val)

@@ -37,6 +37,7 @@ def parse_sequence(bed_file, genome_file, fasta_file):
     
     bed_info = pybedtools.BedTool(bed_file)
     bed_info = bed_info.sequence(fi=genome_file).save_seqs(fn=fasta_file)
+    
     oneHot = np.identity(4)
     
     seqs = []
@@ -68,6 +69,7 @@ def prediction_open_chromatin(one_hot_seq):
     
     
 def prediction_cell_line(one_hot_seq, cell_line):
+    
     n_seq = one_hot_seq.shape[0]
     
     type_chromatin =  np.zeros((n_seq, 1))
@@ -75,9 +77,11 @@ def prediction_cell_line(one_hot_seq, cell_line):
     type_promoter =  np.zeros((n_seq, 1))
 
     partitions_interval = np.arange(3)
-    #inner_partitions_interval = partitions_interval[partitions_interval]
+    inner_partitions_interval = partitions_interval[partitions_interval]
 
-    for val_partition in partitions_interval:
+    for val_partition in inner_partitions_interval:
+        print(val_partition)
+        
         model_chromatin = 'models/tensorflow1/rDHS/'+ cell_line +'/partition_%i/model_compiled.h5' % (val_partition)
         model_promoter = 'models/tensorflow1/cage/'+ cell_line +'/partition_%i/model_compiled.h5' % (val_partition)
         model_enhancer = 'models/tensorflow1/starr/'+ cell_line +'/partition_%i/model_compiled.h5' % (val_partition)
@@ -93,7 +97,6 @@ def prediction_cell_line(one_hot_seq, cell_line):
         type_chromatin += pred_chromatin
         type_promoter += pred_promoter
         type_enhancer += pred_enhancer
-
 
     type_chromatin_avg = type_chromatin/3.0
     type_promoter_avg = type_promoter/3.0
