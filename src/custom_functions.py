@@ -76,31 +76,22 @@ def prediction_cell_line(one_hot_seq, cell_line):
     type_enhancer =  np.zeros((n_seq, 1))
     type_promoter =  np.zeros((n_seq, 1))
 
-    partitions_interval = np.arange(3)
-    inner_partitions_interval = partitions_interval[partitions_interval]
+    model_chromatin = 'models/tensorflow1/rDHS/'+ cell_line +'/model_compiled.h5' 
+    model_promoter = 'models/tensorflow1/cage/'+ cell_line +'/model_compiled.h5' 
+    model_enhancer = 'models/tensorflow1/starr/'+ cell_line +'/model_compiled.h5' 
 
-    for val_partition in inner_partitions_interval:
-        print(val_partition)
-        
-        model_chromatin = 'models/tensorflow1/rDHS/'+ cell_line +'/partition_%i/model_compiled.h5' % (val_partition)
-        model_promoter = 'models/tensorflow1/cage/'+ cell_line +'/partition_%i/model_compiled.h5' % (val_partition)
-        model_enhancer = 'models/tensorflow1/starr/'+ cell_line +'/partition_%i/model_compiled.h5' % (val_partition)
+    chromatin = load_model(model_chromatin, compile=False)
+    promoter = load_model(model_promoter, compile=False)
+    enhancer = load_model(model_enhancer, compile=False)
 
-        chromatin = load_model(model_chromatin, compile=False)
-        promoter = load_model(model_promoter, compile=False)
-        enhancer = load_model(model_enhancer, compile=False)
-        
-        pred_chromatin = chromatin.predict(one_hot_seq, batch_size=1)
-        pred_promoter = promoter.predict(one_hot_seq, batch_size=1)
-        pred_enhancer = enhancer.predict(one_hot_seq, batch_size=1)
-        
-        type_chromatin += pred_chromatin
-        type_promoter += pred_promoter
-        type_enhancer += pred_enhancer
+    pred_chromatin = chromatin.predict(one_hot_seq, batch_size=1)
+    pred_promoter = promoter.predict(one_hot_seq, batch_size=1)
+    pred_enhancer = enhancer.predict(one_hot_seq, batch_size=1)
 
-    type_chromatin_avg = type_chromatin/3.0
-    type_promoter_avg = type_promoter/3.0
-    type_enhancer_avg = type_enhancer/3.0
+    type_chromatin += pred_chromatin
+    type_promoter += pred_promoter
+    type_enhancer += pred_enhancer
 
 
-    return type_chromatin_avg, type_promoter_avg, type_enhancer_avg
+    return type_chromatin, type_promoter, type_enhancer
+    
