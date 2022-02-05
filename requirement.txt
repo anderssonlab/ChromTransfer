@@ -1,17 +1,17 @@
-bedtools                  2.30.0               h7d7f7ad_1    bioconda
-biopython                 1.78             py37h4abf009_1    conda-forge
-cudatoolkit               9.0                  h13b8566_0  
-cudnn                     7.6.5                 cuda9.0_0  
-h5py                      2.10.0                   pypi_0    pypi
-hdf5                      1.10.6               hb1b8bf9_0  
-keras-base                2.3.1                    py37_0  
-numpy                     1.19.1           py37hbc911f0_0  
-pandas                    1.1.1            py37he6710b0_0  
-pybedtools                0.8.1                    pypi_0    pypi
-python                    3.7.9                h7579374_0  
-scikit-learn              0.24.2                   pypi_0    pypi
-scipy                     1.5.2            py37h0b6359f_0  
-tensorflow                1.14.0          gpu_py37hae64822_0  
-tensorflow-base           1.14.0          gpu_py37h8f37b9b_0  
-tensorflow-estimator      1.14.0           py37h5ca1d4c_0    conda-forge
-tensorflow-gpu            1.14.0           
+bedtool==2.30.0
+biopython==1.78
+cudatoolkit==9.0  
+cudnn==7.6.5  
+h5py==2.10.0
+hdf5==1.10.6 
+keras-base==2.3.1
+numpy==1.19.1  
+pandas==1.1.1  
+pybedtools==0.8.1
+python==3.7.9 
+scikit-learn==0.24.2
+scipy==1.5.2 
+tensorflow==1.14.0  
+tensorflow-base==1.14.0  
+tensorflow-estimator==1.14.0
+tensorflow-gpu==1.14.0           
