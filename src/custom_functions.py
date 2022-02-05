@@ -68,6 +68,23 @@ def prediction_open_chromatin(one_hot_seq):
     return _chromatin_
     
     
+def prediction_cell_line1(one_hot_seq, cell_line, tech_):
+    
+    n_seq = one_hot_seq.shape[0]
+    
+    type_cell_ =  np.zeros((n_seq, 1))
+
+    model_cell = 'models/tensorflow1/'+tech_+'/'+ cell_line +'/model_compiled.h5' 
+   
+    cell_ = load_model(model_cell, compile=False)
+   
+    pred_cell = cell_.predict(one_hot_seq, batch_size=1)
+   
+    type_cell_ += pred_cell
+   
+    return type_cell_
+    
+
 def prediction_cell_line(one_hot_seq, cell_line):
     
     n_seq = one_hot_seq.shape[0]
