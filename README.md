@@ -4,7 +4,7 @@ Repo for transfer learning
 
 # The method was tested on Linux SMP Debian 4.19.208-1 x86_64 with NVIDIA Quadro RTX 6000
 
-# Before start the prediction you need to install the tl_andersson.yml environent:
+# Before start the prediction you need to install the tl_andersson.yml environment:
 
   conda env create -f tl_andersson.yml 
 
