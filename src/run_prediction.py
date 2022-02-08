@@ -115,7 +115,7 @@ tmp_df = pd.DataFrame(final_pred_array, columns = name_seq, index = ['TL_Open_Cl
 final_df = tmp_df[['TL_Open_Closed', 
                    'A549_rDHS', 'HCT116_rDHS', 'HEPG2_rDHS', 'K562_rDHS',
                    'A549_prom', 'HCT116_prom', 'HEPG2_prom', 'K562_prom',
-                   'A549_enh', 'HCT116_enh', 'HEPG2_enh', 'K562_enh']]
+                   'A549_enh', 'HCT116_enh', 'HEPG2_enh', 'K562_enh']].round(3)
 
 final_df.to_csv(args.output+'output.csv')
 os.remove(args.fasta)
