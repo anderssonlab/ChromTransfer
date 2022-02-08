@@ -2,8 +2,9 @@ import sys
 import os
 import argparse
 from custom_functions import *
-
-
+from keras.preprocessing.sequence import pad_sequences
+import numpy as np
+import pandas as pd
 
 parser = argparse.ArgumentParser()
 parser.add_argument('-b', '--bed', type=str,
@@ -37,10 +38,16 @@ if args.bed == None:
     sys.exit(1)
 
 
+
+
+os.makedirs(args.output, exist_ok=True)
+
 ## from bed to one hot encoding:
 
-
 one_hot_seq, name_seq = parse_sequence(args.bed, args.genome, args.fasta)
+
+one_hot_seq = pad_sequences(one_hot_seq, padding="post")
+
 
 ## running the transfer learning method
 print('open chromatin prediction')
@@ -49,34 +56,68 @@ open_chromatin = prediction_open_chromatin(one_hot_seq)
 
 ## running the cell line methods
 
-print('cell line activity')
+print('cell line chromatin')
 
-a549_chromatin, a549_promoter, a549_enhancer = prediction_cell_line(one_hot_seq, 'A549')
-hct116_chromatin, hct116_promoter, hct116_enhancer = prediction_cell_line(one_hot_seq, 'HCT116')
-hepg2_chromatin, hepg2_promoter, hepg2_enhancer = prediction_cell_line(one_hot_seq, 'HEPG2')
-k562_chromatin, k562_promoter, k562_enhancer = prediction_cell_line(one_hot_seq, 'K562')
+a549_chromatin = prediction_cell_line1(one_hot_seq, 'A549', 'rDHS')
+hct116_chromatin = prediction_cell_line1(one_hot_seq, 'HCT116', 'rDHS')
+hepg2_chromatin = prediction_cell_line1(one_hot_seq, 'HEPG2', 'rDHS')
+k562_chromatin = prediction_cell_line1(one_hot_seq, 'K562', 'rDHS')
+
+print('cell line promoter')
+
+a549_prom = prediction_cell_line1(one_hot_seq, 'A549', 'cage')
+hct116_prom = prediction_cell_line1(one_hot_seq, 'HCT116', 'cage')
+hepg2_prom = prediction_cell_line1(one_hot_seq, 'HEPG2', 'cage')
+k562_prom = prediction_cell_line1(one_hot_seq, 'K562', 'cage')
+
+print('cell line enhancer')
+
+a549_enha = prediction_cell_line1(one_hot_seq, 'A549', 'starr')
+hct116_enha = prediction_cell_line1(one_hot_seq, 'HCT116', 'starr')
+hepg2_enha = prediction_cell_line1(one_hot_seq, 'HEPG2', 'starr')
+k562_enha = prediction_cell_line1(one_hot_seq, 'K562', 'starr')
 
 
-print(open_chromatin, a549_chromatin, hct116_chromatin, hepg2_chromatin, k562_chromatin,
-      a549_promoter, hct116_promoter, hepg2_promoter, k562_promoter,
-      a549_enhancer, hct116_enhancer, hepg2_enhancer, k562_enhancer
-     )
 
-'''
-all_preds.append(test_type_avg)
-all_y.append(y_val)
-all_l.append(id_val)
+open_chromatin = np.concatenate(open_chromatin, axis=0)
 
-#prediction
-all_preds_conc = np.concatenate(all_preds, axis=0)
-#label
-all_y_conc = np.concatenate(all_y,axis=0)
-#score of the label predicted
-all_l_conc = np.concatenate(all_l,axis=0)
+a549_chromatin = np.concatenate(a549_chromatin, axis=0)
+a549_prom = np.concatenate(a549_prom, axis=0)
+a549_enha = np.concatenate(a549_enha, axis=0)
 
-for i, c, p  in zip(all_y_conc, all_preds_conc, all_l_conc):
-    print(str(i)+','+str(c[0])+','+str(p))#+','+str(c[1])) #+','+str(c[2]))
-'''    
-    
+hct116_chromatin = np.concatenate(hct116_chromatin, axis=0)
+hct116_prom = np.concatenate(hct116_prom, axis=0)
+hct116_enha = np.concatenate(hct116_enha, axis=0)
+
+hepg2_chromatin = np.concatenate(hepg2_chromatin, axis=0)
+hepg2_prom = np.concatenate(hepg2_prom, axis=0)
+hepg2_enha = np.concatenate(hepg2_enha, axis=0)
+
+k562_chromatin = np.concatenate(k562_chromatin, axis=0)
+k562_prom = np.concatenate(k562_prom, axis=0)
+k562_enha = np.concatenate(k562_enha, axis=0)
+
+
+print('creating final output file')
+
+final_pred_array = np.array([open_chromatin, 
+                             a549_chromatin, a549_prom, a549_enha,
+                             hct116_chromatin, hct116_prom, hct116_enha,
+                             hepg2_chromatin, hepg2_prom, hepg2_enha,
+                             k562_chromatin, k562_prom, k562_enha])
+
+tmp_df = pd.DataFrame(final_pred_array, columns = name_seq, index = ['TL_Open_Closed', 
+                                                                     'A549_rDHS', 'A549_prom','A549_enh',
+                                                                     'HCT116_rDHS', 'HCT116_prom','HCT116_enh',
+                                                                     'HEPG2_rDHS', 'HEPG2_prom','HEPG2_enh',
+                                                                     'K562_rDHS', 'K562_prom','K562_enh']).T
+
+final_df = tmp_df[['TL_Open_Closed', 
+                   'A549_rDHS', 'HCT116_rDHS', 'HEPG2_rDHS', 'K562_rDHS',
+                   'A549_prom', 'HCT116_prom', 'HEPG2_prom', 'K562_prom',
+                   'A549_enh', 'HCT116_enh', 'HEPG2_enh', 'K562_enh']]
+
+final_df.to_csv(args.output+'output.csv')
+os.remove(args.fasta)
 
 

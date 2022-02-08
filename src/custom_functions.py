@@ -62,7 +62,7 @@ def prediction_open_chromatin(one_hot_seq):
 
     model_tl = "models/tensorflow1/tl_model_tf1/model_compiled.h5"
     chromatin_tl = load_model(model_tl, compile=False)
-    pred_chromatin_tl = chromatin_tl.predict(one_hot_seq, batch_size=1)
+    pred_chromatin_tl = chromatin_tl.predict(one_hot_seq, batch_size=16)
     _chromatin_ += pred_chromatin_tl
     
     return _chromatin_
@@ -78,7 +78,7 @@ def prediction_cell_line1(one_hot_seq, cell_line, tech_):
    
     cell_ = load_model(model_cell, compile=False)
    
-    pred_cell = cell_.predict(one_hot_seq, batch_size=1)
+    pred_cell = cell_.predict(one_hot_seq, batch_size=16)
    
     type_cell_ += pred_cell
    
