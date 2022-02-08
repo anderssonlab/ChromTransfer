@@ -13,9 +13,15 @@ Repo for transfer learning
   python src/run_prediction.py -b data/tmp.bed -r genome_file/hg38seq.fa -g 0 -f tmp.fasta -o output_dir
   
   where:
+  
     -b = bed file (necessary)
+    
     -r = genome file in fasta format (necessary)
+    
     -g = if you have GPU(s) otherwise not include this flag
-    -f = file to store temporary fasta
-    -o = output folder to store csv result file
+    
+    -f = file to store temporary fasta (necessary)
+    
+    -o = output folder to store csv result file (necessary)
+    
         
