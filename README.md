@@ -3,6 +3,7 @@ Repo for transfer learning
 
 
 ## The method was tested on Linux SMP Debian 4.19.208-1 x86_64 with NVIDIA Quadro RTX 6000
+    -  the models were trained using tensorflow-gpu==1.14 and keras
 
 ## Before start the prediction you need to install the tl_andersson.yml environment:
     
