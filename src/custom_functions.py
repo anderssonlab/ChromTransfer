@@ -43,9 +43,8 @@ def parse_sequence(bed_file, genome_file, fasta_file):
     ids = []
     
     for info_ in SeqIO.parse(fasta_file, 'fasta'):
-        info_seq = info_.seq.upper().replace('N','')
         ids.append(info_.id)
-        seqs.append(encode_sequence(info_seq), oneHot))
+        seqs.append(encode_sequence(info_.seq.upper().replace('N',''), oneHot))
         
     seq_array = np.array(seqs)
     ids_array = np.array(ids)
