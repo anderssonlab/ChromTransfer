@@ -102,8 +102,12 @@ def transfer_learning_model():
     model_file = 'models/tensorflow1/tl_model_tf1/model_compiled.h5'
     base_model = load_model(model_file, compile=False)
     base_model.trainable = True # for inference mode
-	#base_model.trainable = False # completelly frozen
+    #base_model.trainable = False # completelly frozen
     deepmodel = Model(inputs=base_model.inputs, outputs=base_model._layers_by_depth[7][0].output)
+    #for l in deepmodel.layers: # completelly frozen
+    #    l.trainable = False # completelly frozen
+    #deepmodel.trainable = False # completelly frozen
+
     output_ = deepmodel(input_layer)#, training=False)
 
     layer = Dense(1024, activation='relu')(output_)
