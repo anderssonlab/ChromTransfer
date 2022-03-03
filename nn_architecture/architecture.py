@@ -9,11 +9,11 @@ from keras.layers import Dense, Input, Dropout, Activation
 import keras
 from keras.layers.normalization import BatchNormalization
 from keras.regularizers import l2
-
-
+from keras.models import load_model
 
 inizialiser = "he_normal"
 regularization_v = 1e-4
+
 
 def conv1d_module(input_layer, window_size, filter_size, regularization_v):
 	layer1d = Conv1D(filter_size, window_size, padding='same', kernel_initializer=inizialiser,
@@ -22,6 +22,7 @@ def conv1d_module(input_layer, window_size, filter_size, regularization_v):
 	layer1d = Dropout(0.1)(layer1d)
 
 	return layer1d
+
 
 def shortcut_module(input_layer, window_size, filter_size, regularization_v):
 	block_1 = Conv1D(filter_size, window_size, padding='same',kernel_initializer=inizialiser,
@@ -41,6 +42,7 @@ def shortcut_module(input_layer, window_size, filter_size, regularization_v):
 	connection = add([block_1, shortcut])
 
 	return connection
+
 
 def no_shortcut_module(input_layer, window_size, filter_size, regularization_v):
 	block_1 = Conv1D(filter_size, window_size, padding='same',kernel_initializer=inizialiser,
@@ -94,3 +96,26 @@ def build_model(regularization_v, inner_filters):
 	final_model.summary()
 	return final_model
 
+
+def transfer_learning_model():
+    input_layer = Input(shape=(None, 4))
+    model_file = 'models/tensorflow1/tl_model_tf1/model_compiled.h5'
+    base_model = load_model(model_file, compile=False)
+    base_model.trainable = True # for inference mode
+	#base_model.trainable = False # completelly frozen
+    deepmodel = Model(inputs=base_model.inputs, outputs=base_model._layers_by_depth[7][0].output)
+    output_ = deepmodel(input_layer)#, training=False)
+
+    layer = Dense(1024, activation='relu')(output_)
+    layer = BatchNormalization()(layer)
+    layer = Dropout(0.1)(layer)
+
+    layer = Dense(32, activation='relu')(layer)
+    layer = BatchNormalization()(layer)
+    layer = Dropout(0.1)(layer)
+    
+    
+    layer = Dense(1, activation='sigmoid')(layer)
+    tl_model = Model(inputs=visible, outputs=layer)
+    tl_model.summary()
+    return tl_model
