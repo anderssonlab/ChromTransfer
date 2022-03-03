@@ -94,6 +94,3 @@ def build_model(regularization_v, inner_filters):
 	final_model.summary()
 	return final_model
 
-
-
-model = build_model(regularization_v, 64)
