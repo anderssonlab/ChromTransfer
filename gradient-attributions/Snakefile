@@ -1,0 +1,33 @@
+MODELS = glob_wildcards('models/model_compiled.{MODEL}.h5').MODEL
+
+rule all:
+    input:
+        expand(f"processed/{{MODEL}}/{(config['fasta'][:-3] + 'fasta').split('/')[-1]}.grad-x-input", MODEL=MODELS),
+        expand(f"processed/{{MODEL}}/{(config['fasta'][:-3] + 'fasta').split('/')[-1]}.grad-x-input.gz", MODEL=MODELS),
+
+rule format_to_fasta:
+    input:
+        config['fasta']
+    output:
+        temp(config['fasta'][:-3] + 'fasta')
+    shell:
+        'python code/format-sequence-TSV-to-FASTA.py {input} > {output}'
+
+rule compute_attributions:
+    input:
+        fasta = config['fasta'][:-3] + 'fasta',
+        model = 'models/model_compiled.{MODEL}.h5',
+    output:
+        attribution = f"processed/{{MODEL}}/{(config['fasta'][:-3] + 'fasta').split('/')[-1]}.grad-x-input"
+    params:
+        method = 'grad_x_input'
+    shell:
+        'python code/compute-attribution.py {input.fasta} --method {params.method} -m {input.model} -o {output.attribution}'
+
+rule gzip_attributions:
+    input:
+        attribution = f"processed/{{MODEL}}/{(config['fasta'][:-3] + 'fasta').split('/')[-1]}.grad-x-input"
+    output:
+        attribution_gz = f"processed/{{MODEL}}/{(config['fasta'][:-3] + 'fasta').split('/')[-1]}.grad-x-input.gz"
+    shell:
+        'gzip --keep --best {input.attribution}'

@@ -1,0 +1,10 @@
+**/.snakemake/**/*
+**/.vscode/**/*
+
+gradient-attributions/processed/**/*
+
+
+# Allow
+!**/
+
+!/gradient-attributions/processed/**/*.gz
