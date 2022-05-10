@@ -8,3 +8,4 @@ gradient-attributions/processed/**/*
 !**/
 
 !/gradient-attributions/processed/**/*.gz
+!/gradient-attributions/processed/**/*.png

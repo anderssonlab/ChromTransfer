@@ -6,8 +6,6 @@ import numpy as np
 
 import igrads
 
-from rbpnet.attribution import attribution
-
 # %%
 base2int = {'A': 0, 'C': 1, 'G': 2, 'T': 3}
 

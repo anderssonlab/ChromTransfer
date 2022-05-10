@@ -2,23 +2,26 @@ MODELS = glob_wildcards('models/model_compiled.{MODEL}.h5').MODEL
 
 rule all:
     input:
-        expand(f"processed/{{MODEL}}/{(config['fasta'][:-3] + 'fasta').split('/')[-1]}.grad-x-input", MODEL=MODELS),
-        expand(f"processed/{{MODEL}}/{(config['fasta'][:-3] + 'fasta').split('/')[-1]}.grad-x-input.gz", MODEL=MODELS),
+        expand(f"processed/{{MODEL}}/{(config['tsv'][:-3] + 'fasta').split('/')[-1]}.grad-x-input", MODEL=MODELS),
+        expand(f"processed/{{MODEL}}/{(config['tsv'][:-3] + 'fasta').split('/')[-1]}.grad-x-input.gz", MODEL=MODELS),
+
+        # plots
+        expand(f"processed/{{MODEL}}/grad-x-input.figures/done.empty", MODEL=MODELS),
 
 rule format_to_fasta:
     input:
-        config['fasta']
+        config['tsv']
     output:
-        temp(config['fasta'][:-3] + 'fasta')
+        temp(config['tsv'][:-3] + 'fasta')
     shell:
         'python code/format-sequence-TSV-to-FASTA.py {input} > {output}'
 
 rule compute_attributions:
     input:
-        fasta = config['fasta'][:-3] + 'fasta',
+        fasta = config['tsv'][:-3] + 'fasta',
         model = 'models/model_compiled.{MODEL}.h5',
     output:
-        attribution = f"processed/{{MODEL}}/{(config['fasta'][:-3] + 'fasta').split('/')[-1]}.grad-x-input"
+        attribution = f"processed/{{MODEL}}/{(config['tsv'][:-3] + 'fasta').split('/')[-1]}.grad-x-input"
     params:
         method = 'grad_x_input'
     shell:
@@ -26,8 +29,29 @@ rule compute_attributions:
 
 rule gzip_attributions:
     input:
-        attribution = f"processed/{{MODEL}}/{(config['fasta'][:-3] + 'fasta').split('/')[-1]}.grad-x-input"
+        attribution = f"processed/{{MODEL}}/{(config['tsv'][:-3] + 'fasta').split('/')[-1]}.grad-x-input"
     output:
-        attribution_gz = f"processed/{{MODEL}}/{(config['fasta'][:-3] + 'fasta').split('/')[-1]}.grad-x-input.gz"
+        attribution_gz = f"processed/{{MODEL}}/{(config['tsv'][:-3] + 'fasta').split('/')[-1]}.grad-x-input.gz"
     shell:
         'gzip --keep --best {input.attribution}'
+
+rule select_first10_attributions:
+    input:
+        f"processed/{{MODEL}}/{(config['tsv'][:-3] + 'fasta').split('/')[-1]}.grad-x-input"
+    output:
+        temp(f"processed/{{MODEL}}/{(config['tsv'][:-3] + 'fasta').split('/')[-1]}.first-10.grad-x-input")
+    params:
+        n = lambda wc: 10*3
+    shell:
+        'head -n {params.n} {input} > {output}'
+
+rule plot_attributions:
+    input:
+        f"processed/{{MODEL}}/{(config['tsv'][:-3] + 'fasta').split('/')[-1]}.first-10.grad-x-input"
+    output:
+        f"processed/{{MODEL}}/grad-x-input.figures/done.empty"
+    params:
+        path = lambda wc: f"processed/{wc.MODEL}/grad-x-input.figures/" + "\{name\}" + ".png"
+    run:
+        shell('python code/plot-attribution.py {input} -o {params.path}')
+        shell('touch {output}')
