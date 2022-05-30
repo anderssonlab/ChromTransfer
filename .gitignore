@@ -2,6 +2,7 @@
 **/.vscode/**/*
 
 gradient-attributions/processed/**/*
+gradient-attributions/processed.10-05-2022/**/*
 
 
 # Allow
@@ -9,3 +10,5 @@ gradient-attributions/processed/**/*
 
 !/gradient-attributions/processed/**/*.gz
 !/gradient-attributions/processed/**/*.png
+!/gradient-attributions/processed.10-05-2022/**/*.gz
+!/gradient-attributions/processed.10-05-2022/**/*.png
