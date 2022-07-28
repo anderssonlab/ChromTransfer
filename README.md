@@ -1,8 +1,9 @@
-# transfer_learning_for_regulatory_genomics
-Repo for transfer learning
+# ChromTransfer
+Repository with code for modeling, feature attribution analysis and model interpretation performed in Salvatore et al, 2022 (BioRxiv), as well as trained models.
 
 
 ## The method was tested on Linux SMP Debian 4.19.208-1 x86_64 with NVIDIA Quadro RTX 6000
+    
     -  the models were trained using tensorflow-gpu==1.14 and keras
 
 ## Before start the prediction you need to install the tl_andersson.yml environment:
