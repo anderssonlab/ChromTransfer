@@ -6,7 +6,7 @@ Models were trained using tensorflow-gpu==1.14 and keras (version 3.2.1) on a Li
     
 ## Using the models for predictions
 
-We provide a stand-alone script that allows you to use the 7 models (pre-trained, A549, HCT116, HepG2, GM12878, K562, MCF7) for predictions of chromatin accesibility on a set of genomic regions (bed). 
+We provide a stand-alone script that allows you to use the 7 models (pre-trained, A549, HCT116, HepG2, GM12878, K562, MCF7) for predictions of chromatin accessibility on a set of genomic regions (bed). 
 
 First, you need to install the genomic_tool_tl.yml environment:
     
