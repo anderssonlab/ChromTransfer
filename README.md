@@ -1,16 +1,17 @@
 # ChromTransfer
-Repository with code for modeling, feature attribution analysis and model interpretation performed in Salvatore et al, 2022 (BioRxiv), as well as trained models.
+Code for modeling, feature attribution analysis, and model interpretation as well as the resulting models used in Salvatore et al, 2022 (BioRxiv).
 
-
-## The method was tested on Linux SMP Debian 4.19.208-1 x86_64 with NVIDIA Quadro RTX 6000
+Models were trained using tensorflow-gpu==1.14 and keras (version 3.2.1) on a Linux SMP Debian 4.19.208-1 x86_64 machine using NVIDIA Quadro RTX 6000 cards with 24 GB of VRAM.
     
-    -  the models were trained using tensorflow-gpu==1.14 and keras
+## Using the models for predictions
 
-## Before start the prediction you need to install the tl_andersson.yml environment:
+We provide stand-alone script for using the models for predictions. 
+
+First, you need to install the genomic_tool_tl.yml environment:
     
     - conda env create -f genomic_tool_tl.yml 
 
-# To run the prediction you need to use the script run_prediction.py in this way:
+The prediction script is run in the following way:
   
   python src/run_prediction.py -b data/tmp.bed -r genome_file/hg38seq.fa -g 0 -f tmp.fasta -o output_dir
   
@@ -20,10 +21,8 @@ Repository with code for modeling, feature attribution analysis and model interp
     
     -r = genome file in fasta format (necessary)
     
-    -g = if you have GPU(s) otherwise not include this flag
+    -g = to make use of GPU(s) (1) or not (0)
     
     -f = file to store temporary fasta (necessary)
     
     -o = output folder to store csv result file (necessary)
-    
-        
