@@ -13,7 +13,7 @@ First, you need to install the genomic_tool_tl.yml environment:
 
 The prediction script is run in the following way:
   
-  python src/run_prediction.py -b data/tmp.bed -r genome_file/hg38seq.fa -g 0 -f tmp.fasta -o output_dir
+  - python src/run_prediction.py -b data/tmp.bed -r genome_file/hg38seq.fa -g 0 -f tmp.fasta -o output_dir
   
   where:
   
