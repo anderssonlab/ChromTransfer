@@ -1,2 +1,2 @@
 #tsv: raw/HEPG2_pos.csv
-bed: raw/27-05-2022/{BEDFILE}.bed
+bed: raw/{BEDFILE}.bed
