@@ -1,0 +1,73 @@
+MODELS = glob_wildcards('models/27-05-2022/{MODEL}.h5').MODEL
+BEDFILES = glob_wildcards(config['bed']).BEDFILE
+
+rule all:
+    input:
+        expand('processed/{MODEL}/{BEDFILE}.grad-x-input.gz', MODEL=MODELS, BEDFILE=BEDFILES)
+
+        #expand(f"processed/{{MODEL}}/{(config['tsv'][:-3] + 'fasta').split('/')[-1]}.grad-x-input", MODEL=MODELS),
+        #expand(f"processed/{{MODEL}}/{(config['tsv'][:-3] + 'fasta').split('/')[-1]}.grad-x-input.gz", MODEL=MODELS),
+
+        # plots
+        #expand(f"processed/{{MODEL}}/grad-x-input.figures/done.empty", MODEL=MODELS),
+
+# rule format_to_fasta:
+#     input:
+#         config['tsv']
+#     output:
+#         temp(config['tsv'][:-3] + 'fasta')
+#     shell:
+#         'python code/format-sequence-TSV-to-FASTA.py {input} > {output}'
+
+rule bed_to_fasta:
+    input:
+        bed = config['bed']
+    output:
+        fasta = config['bed'][:-3] + 'fasta'
+    params:
+        hg38 = '~/data/GRCh38/grch38.fasta'
+    shell:
+        'bedtools getfasta -fi {params.hg38} -bed {input.bed} -fo {output.fasta}'
+
+rule compute_attributions:
+    input:
+        #fasta = config['tsv'][:-3] + 'fasta',
+        fasta = config['bed'][:-3] + 'fasta',
+        model = 'models/27-05-2022/{MODEL}.h5',
+    output:
+        attribution = 'processed/{MODEL}/{BEDFILE}.grad-x-input',
+        #attribution = f"processed/{{MODEL}}/{(config['tsv'][:-3] + 'fasta').split('/')[-1]}.grad-x-input"
+    params:
+        method = 'grad_x_input'
+    shell:
+        'python code/compute-attribution.py {input.fasta} --method {params.method} -m {input.model} -o {output.attribution}'
+
+rule gzip_attributions:
+    input:
+        attribution = 'processed/{MODEL}/{BEDFILE}.grad-x-input'
+    output:
+        attribution_gz = 'processed/{MODEL}/{BEDFILE}.grad-x-input.gz'
+    shell:
+        'gzip --keep --best {input.attribution}'
+
+# rule select_first10_attributions:
+#     input:
+#         f'processed/{{MODEL}}/{config['bed'][:-3]}.grad-x-input'
+#     output:
+#         temp(f'processed/{{MODEL}}/{config['bed'][:-3]}.first-10.grad-x-input')
+#     params:
+#         n = lambda wc: 10*3
+#     shell:
+#         'head -n {params.n} {input} > {output}'
+
+# rule plot_attributions:
+#     input:
+#         f'processed/{{MODEL}}/{config['bed'][:-3]}.first-10.grad-x-input'
+#     output:
+#         f'processed/{{MODEL}}/{config['bed'][:-3]}.first-10.grad-x-input'
+#         f"processed/{{MODEL}}/grad-x-input.figures/done.empty"
+#     params:
+#         path = lambda wc: f"processed/{wc.MODEL}/grad-x-input.figures/" + "\{name\}" + ".png"
+#     run:
+#         shell('python code/plot-attribution.py {input} -o {params.path}')
+#         shell('touch {output}')

@@ -1,0 +1,2 @@
+#tsv: raw/HEPG2_pos.csv
+bed: raw/{BEDFILE}.bed
