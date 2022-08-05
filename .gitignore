@@ -1,7 +1,7 @@
 **/.snakemake/**/*
 **/.vscode/**/*
 
-gradient-attributions/processed.10-05-2022/**/*
+gradient-attributions/processed/**/*
 
 
 # Allow
@@ -9,5 +9,3 @@ gradient-attributions/processed.10-05-2022/**/*
 
 !/gradient-attributions/processed/**/*.gz
 !/gradient-attributions/processed/**/*.png
-!/gradient-attributions/processed.10-05-2022/**/*.gz
-!/gradient-attributions/processed.10-05-2022/**/*.png
