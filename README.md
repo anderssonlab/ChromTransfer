@@ -28,7 +28,7 @@ where:
     
     -o = output folder to store csv result file (necessary)
     
-## Using the pre-trained model for fine-tuning with a new dataset()
+## Using the pre-trained model for fine-tuning with a new dataset(s)
 
 We provide an example script here nn_architecture/transfer_learning_example.py. The script is an example on how to use the pre-trained model and fine-tune with new data. The code need the pre-trained model and a input file with sequences in one-hot encoded format.
 
