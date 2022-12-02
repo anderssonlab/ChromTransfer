@@ -32,8 +32,13 @@ def transfer_learning_model():
     input_layer = Input(shape=(None, 4))
     model_file = 'models/tensorflow1/tl_model_tf1/model_compiled.h5'
     base_model = load_model(model_file, compile=False)
-    base_model.trainable = True # for inference mode
+    
+    # FOR ADDITIONAL REFERENCE FOLLOW https://keras.io/guides/transfer_learning/
+    # First freeze the model completely and do a first Fine-tuning of the model. Check stability and improvement of the model.
     #base_model.trainable = False # completelly frozen
+    
+    # Then run in "inference mode" ---> this is used to do a round of fine-tuning of the entire model and to try to improve performance even more
+    base_model.trainable = True     
     
     # DECIDE AT WHICH LAYER OF THE NETWORK THE MODEL NEEDS TO BE FINE-TUNED (THE FINE-TUNING CAN BE DONE IN DIFFERENT WAYS)
     # FOR ADDITIONAL REFERENCE FOLLOW https://keras.io/guides/transfer_learning/
