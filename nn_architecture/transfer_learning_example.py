@@ -22,6 +22,7 @@ import keras
 from keras.layers.normalization import BatchNormalization
 from keras.regularizers import l2
 from keras.models import load_model
+from sklearn.model_selection import train_test_split
 
 inizialiser = "he_normal"
 regularization_v = 1e-4
@@ -72,28 +73,21 @@ def transfer_learning_model():
 # Change file npz with your preferred files. The input files should one-hot encoded sequences.
 # You can decide how to do train/val/test splits or CV (Note in the original publication, we have done 3-CV and test on Chr2/Chr3 in all the comparisons)
 
-
 data = np.load('file.npz', allow_pickle=True, encoding='bytes')
 
-Y = data['label_seq'] # LABEL FOR THE SEQUENCES
-X = data['X'] # ONE-HOT ENCODING SEQUENCES 
+# this is just an example: 
+
+Y = data['label_'] # LABEL FOR THE SEQUENCES
+X = data['sequence_'] # ONE-HOT ENCODING SEQUENCES 
+
+X_train, X_val, y_train, y_val = train_test_split(X, Y, test_size=0.33, random_state=42)
 
 learning_rate = 0.000005 
-
-# Load training data
-X_train = X[train_set]
-y_train = Y[train_set]
-
-# Load validation data
-X_val = X[val_set]
-y_val = Y[val_set]
-
 
 class_weights = class_weight.compute_class_weight('balanced',
                                                   np.unique(y_train),
                                                   y_train)
 
-    
 # Call the model for fine-tuning the pre-trained model 
 model = deepmodel()
 
@@ -124,3 +118,16 @@ lr_reducer = keras.callbacks.ReduceLROnPlateau(monitor='val_loss',
 
 # Save log file with info
 logger_csv = keras.callbacks.CSVLogger(logger_file, separator=",", append=False)
+
+# Use tensorboard to monitor the model training
+tensorboard = TensorBoard(log_dir=log_file,
+                          histogram_freq=0,
+                          write_graph=True,
+                          write_images=False)
+
+callbacks = [checkpointer, earlyStopping, lr_reducer, tensorboard, logger_csv]
+
+
+history = model.fit(X_train, y_train, validation_data=(X_train, y_train), epochs=100, verbose=1, batch_size=128,
+                    class_weight=class_weights, 
+                    callbacks=callbacks).history
