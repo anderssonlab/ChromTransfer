@@ -69,11 +69,11 @@ def transfer_learning_model():
     tl_model.summary()
     return tl_model
   
-  
-# Change file npz with your preferred files. The input files should one-hot encoded sequences.
-# You can decide how to do train/val/test splits or CV (Note in the original publication, we have done 3-CV and test on Chr2/Chr3 in all the comparisons)
+# Change file.npz with your preferred files. The input files should contain one-hot encoded sequences.
+# You can decide how to do train/val/test splits or CV.
+# Note in the original publication, we have done 3-CV and test on Chr2/Chr3 in all the comparisons. 
 
-data = np.load('file.npz', allow_pickle=True, encoding='bytes')
+data = np.load(file.npz, allow_pickle=True, encoding='bytes')
 
 # this is just an example: 
 
@@ -92,6 +92,7 @@ class_weights = class_weight.compute_class_weight('balanced',
 model = deepmodel()
 
 opt = Adam(lr=learning_rate)
+
 model.save(specify_model_file)
 
 # IN THE ORIGINAL PUBLICATION WE FINE-TUNED FOR BINARY (CELL TYPE SPECIFIC CLASSIFICATION) 
@@ -126,7 +127,6 @@ tensorboard = TensorBoard(log_dir=log_file,
                           write_images=False)
 
 callbacks = [checkpointer, earlyStopping, lr_reducer, tensorboard, logger_csv]
-
 
 history = model.fit(X_train, y_train, validation_data=(X_train, y_train), epochs=100, verbose=1, batch_size=128,
                     class_weight=class_weights, 
