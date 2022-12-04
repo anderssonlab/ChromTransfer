@@ -33,8 +33,8 @@ where:
 We provide an example script here nn_architecture/transfer_learning_example.py. The script is an example on how to use the pre-trained model and fine-tune with new data. The code need the pre-trained model and a input file with sequences in one-hot encoded format.
 
 Steps to follow :
-    1- Load pre-trained model
-    2- Decide at which level you want to fine-tune the original architecture [see comment in the script in the function transfer_learning_model()]
-    3- Load the file with sequences and labels of interest
-    4- Run training/validation/test or k-fold cross validation
+    - 1: Load pre-trained model
+    - 2: Decide at which level you want to fine-tune the original architecture [see comment in the script in the function transfer_learning_model()]
+    - 3: Load the file with sequences and labels of interest
+    - 4: Run training/validation/test or k-fold cross validation
 
