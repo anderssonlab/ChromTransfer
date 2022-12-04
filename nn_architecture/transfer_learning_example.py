@@ -62,7 +62,7 @@ def transfer_learning_model():
     layer = Dropout(0.1)(layer)
     
     # IN THE ORIGINAL PUBLICATION WE FINE-TUNED FOR BINARY (CELL TYPE SPECIFIC CLASSIFICATION) 
-    # YOU CAN CHANGE THIS LINE OF CODE IF YOU WISH TO DO MULTI-CLASS BY CHANGING NUMBER OF OUTPUTS NODES
+    # YOU CAN CHANGE THIS LINE OF CODE IF YOU WISH TO DO MULTI-CLASS BY CHANGING NUMBER OF OUTPUTS NODES & ACTIVATION FUNCTION
     
     layer = Dense(1, activation='sigmoid')(layer)
     tl_model = Model(inputs=visible, outputs=layer)
@@ -127,6 +127,7 @@ tensorboard = TensorBoard(log_dir=log_file,
                           write_images=False)
 
 callbacks = [checkpointer, earlyStopping, lr_reducer, tensorboard, logger_csv]
+
 
 history = model.fit(X_train, y_train, validation_data=(X_train, y_train), epochs=100, verbose=1, batch_size=128,
                     class_weight=class_weights, 
