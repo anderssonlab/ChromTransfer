@@ -1,0 +1,38 @@
+gw = glob_wildcards('raw/{SET}/{CELL}.csv')
+
+rule ALL:
+    input:
+        expand('processed/{SET}/{CELL}.bed', SET=gw.SET, CELL=gw.CELL),
+        expand('processed/{SET}/{CELL}.fasta', SET=gw.SET, CELL=gw.CELL),
+        expand('processed/{SET}/{SET}.fasta', SET=gw.SET), 
+
+rule csv_to_bed:
+    input:
+        csv = 'raw/{SET}/{CELL}.csv'
+    output:
+        bed = 'processed/{SET}/{CELL}.bed'
+    run:
+        with open(input.csv) as f_in, open(output.bed, 'w') as f_out:
+            for line in f_in:
+                chrom_start_end, name = line.strip().split(',')
+                chrom, start_end = chrom_start_end.split(':')
+                start, end = start_end.split('-')
+                print('\t'.join([chrom, start, end, name]), file=f_out)
+
+rule bed_to_fasta:
+    input:
+        bed = 'processed/{SET}/{CELL}.bed'
+    output:
+        fasta = 'processed/{SET}/{CELL}.fasta'
+    params:
+        genome = '~/data/genomes/GRCh38/grch38.fasta'
+    shell:
+        'bedtools getfasta -name -fi {params.genome} -bed {input.bed} > {output.fasta}'
+
+rule concat_fasta:
+    input:
+        fasta = expand('processed/{SET}/{CELL}.fasta', CELL=set(gw.CELL), allow_missing=True)
+    output:
+        fasta = 'processed/{SET}/{SET}.fasta'
+    shell:
+        'cat {input.fasta} > {output.fasta}'
