@@ -1,6 +1,8 @@
 # ChromTransfer
 Code for modeling, feature attribution analysis, and model interpretation as well as the resulting models used in Salvatore et al, 2022 (BioRxiv).
 
+[![DOI](https://zenodo.org/badge/454701073.svg)](https://zenodo.org/badge/latestdoi/454701073)
+
 Models were trained using tensorflow-gpu (version 1.14) and keras (version 3.2.1) on a Linux SMP Debian 4.19.208-1 x86_64 machine using NVIDIA Quadro RTX 6000 cards with 24 GB of VRAM.
 
 
