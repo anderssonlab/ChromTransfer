@@ -4,19 +4,29 @@ Code for modeling, feature attribution analysis, and model interpretation as wel
 Models were trained using tensorflow-gpu (version 1.14) and keras (version 3.2.1) on a Linux SMP Debian 4.19.208-1 x86_64 machine using NVIDIA Quadro RTX 6000 cards with 24 GB of VRAM.
 
 
-## Using the pre-trained model for fine-tuning on a new dataset
+## Finetuning
 
-We provide an example script (nn_architecture/transfer_learning_example.py) to illustrate how to fine-tune the pre-trained model on new data.
+Finetuning may be performed on chromatin accessability data of new cell lines via the `finetune.py` script. 
 
-Steps to follow :
+```
+usage: finetune.py [-h] --positive-sequence-name POSITIVE_SEQUENCE_NAME --pretrained-model <pretrained-model.h5> [--epochs EPOCHS] [--shuffle SHUFFLE] [--cache]
+                   --output <model.h5>
+                   <sequences.fasta>
 
-    -1: Load pre-trained model
+positional arguments:
+  <sequences.fasta>     Training sequences in FASTA format.
 
-    -2: Decide at which level you want to fine-tune the original architecture [see comment in the script in the function transfer_learning_model()]
-    
-    -3: Load the file with sequences and labels of interest
-    
-    -4: Run training/validation/test or k-fold cross validation
+optional arguments:
+  -h, --help            show this help message and exit
+  --positive-sequence-name POSITIVE_SEQUENCE_NAME
+                        Name of positive-class samples. E.g. 'A549' for headers of form '>A549::chr2:1527286-1527886'. Other names are treated as negatve instances.
+  --pretrained-model <pretrained-model.h5>
+                        Pretrained model.
+  --epochs EPOCHS       Number of finetuning epochs.
+  --shuffle SHUFFLE     Dataset shuffle buffer size.
+  --cache               Cache dataset in memory.
+  --output <model.h5>   Finetuned model destination.
+```
 
 
 ## Using the models for predictions
